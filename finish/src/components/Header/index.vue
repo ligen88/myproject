@@ -7,9 +7,9 @@
     text-color="black"
     active-text-color="rgb(103, 100, 243)"
   >
-    <el-menu-item index="1">我的问卷</el-menu-item>
+    <el-menu-item index="1" @click="back">我的问卷</el-menu-item>
     <el-menu-item index="2" @click="userManage">个人中心</el-menu-item>
-    <el-menu-item index="3"><a target="_blank">用户管理</a></el-menu-item>
+    <el-menu-item index="3" disabled><a target="_blank">用户管理</a></el-menu-item>
     <!--用户信息-->
     <el-header>
       <el-dropdown>
@@ -36,6 +36,9 @@ export default {
     };
   },
   methods: {
+      back(){
+          this.$router.push("/home")
+      },
     userManage() {
       this.$router.push("/home/userinfo");
     },

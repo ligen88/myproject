@@ -19,8 +19,8 @@
                     <el-input v-model="search" placeholder="请输入要查询的内容" icon="el-icon-search"></el-input>
                     <el-divider></el-divider>
                     <div>
-                        <router-link to='/home/userinfo'>点我</router-link>
-                        <router-view></router-view>
+                        <el-empty><router-view></router-view></el-empty>
+                        
                     </div>
                 </el-main>
                 
@@ -32,6 +32,7 @@
 <script>
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import request from '@/api/requset';
 export default {
   name: "Home",
   components:{
@@ -45,6 +46,16 @@ export default {
       }
   },
   methods:{
+      load(){
+              request.post(
+                  'http://127.0.0.1:8088/api/login',{
+                      "name":"root",
+                      "password":"123456"
+                  }
+
+              ).
+              then(res=>{console.log(res);})
+      },
       createQuestion(){
          this.$prompt('请输入你要创建的问卷标题', '提示', {
           confirmButtonText: '确定',
@@ -63,7 +74,10 @@ export default {
           });       
         });
       }
-  }
+  },
+//     mounted(){
+//     this.$bus.$emit("hello","帅哥");
+//   }
 };
 </script>
 

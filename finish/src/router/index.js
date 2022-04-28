@@ -1,54 +1,58 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from "@/pages/Login"
-import Home from "@/pages/Home"
-import Register from "@/pages/Register"
-import Userinfo from "@/pages/Userinfo"
-import LogReg from "@/pages/LogReg"
+
 
 Vue.use(VueRouter)
 
 const routes = [
     {
-        name:"logreg",
-        path:"/logreg",
-        component:LogReg,
-        children:[
-            {
-                path:"register",
-                component:Register
+        name: "logreg",
+        path: "/logreg",
+        component: () => import('@/pages/LogReg'),
+        children: [
+            {   
+                name:"register",
+                path: "register",
+                component: () => import('@/pages/Register')
             },
-            {
-                path:"login",
-                component:Login
+            {   
+                name:"login",
+                path: "login",
+                component: () => import('@/pages/Login')
             },
         ]
     },
 
     {
-        name:"home",
-        path:"/home",
-        component:Home,
-        children:[
+        name: "home",
+        path: "/home",
+        meta:{auth:true},
+        component: ()=>import('@/pages/Home'),
+        children: [
             {
-                path:"userinfo", 
-                component:Userinfo
-            }
+                path: "userinfo",
+                component:()=>import('@/pages/Userinfo')
+            },
+     
         ]
     },
- 
-
     {
-        path:"*",
-        redirect:"/logreg/login"
+        path: "*",
+        redirect: "/logreg/login"
     }
+
 
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
+router.beforeEach((to, from, next) => {
+    const token=localStorage.getItem('token');
+    if (to.name !== 'login'&&to.name!=='register'&& !token) next({ name: 'login' })
+    else next()
+  })
 
 export default router

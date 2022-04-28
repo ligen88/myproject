@@ -1,137 +1,131 @@
 <template>
-  <div id="register">
-         <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-        <div class="title-container">
-            <h3 class="title">注册页面</h3>
-        </div>
+  <div class="register-container">
+    <h2>注册页面</h2>
+    <el-form
+      :model="ruleForm"
+      status-icon
+      :rules="rules"
+      ref="ruleForm"
+      label-width="100px"
+      class="demo-ruleForm"
+    >
+      <el-form-item label="帐号" prop="name">
+        <el-input
+          type="name"
+          v-model="ruleForm.name"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
 
-        <el-form-item prop="username">
-            <span class="svg-container">
-            <svg-icon icon-class="user" />
-            </span>
-            <el-input
-            ref="username"
-            v-model="loginForm.username"
-            placeholder="请输入您的用户名"
-            name="username"
-            type="text"
-            tabindex="1"
-            auto-complete="on"
-            />
-        </el-form-item>
+      <el-form-item label="密码" prop="pass">
+        <el-input
+          type="password"
+          v-model="ruleForm.pass"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="确认密码" prop="checkPass">
+        <el-input
+          type="password"
+          v-model="ruleForm.checkPass"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
 
-        <el-form-item prop="password">
-            <span class="svg-container">
-            <svg-icon icon-class="password" />
-            </span>
-            <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="请输入您的密码"
-            name="password"
-            tabindex="2"
-            auto-complete="on"
-            @keyup.enter.native="handleLogin"
-            />
-            <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-            </span>
-        </el-form-item>
-
-        <el-button type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-            <p class="tips">已经有帐号？点我去<a @click="goLogin">登录</a></p>
-        </el-form>
+      <el-form-item>
+        <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
+      </el-form-item>
+    </el-form>
+     <p>还没有帐号？点我前去<router-link to="/logreg/login">登录</router-link></p>
   </div>
 </template>
 
 <script>
-    export default {
-    name: "Register",
-    data() {
-        return {
-            name:"",
-            password:"",
-            loginForm:[]
+export default {
+  name: "Register",
+  data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.ruleForm.checkPass !== "") {
+          this.$refs.ruleForm.validateField("checkPass");
         }
-    },
-    methods:{
-       handleLogin(){
-           this.$router.push('/home')
-       },
-       goLogin(){
-           this.$router.push('/logreg/login');
-       },
-       loginRules(){
-
-       },
-       passwordType(){},
-       showPwd(){},
-       loading(){},
-    },
+        callback();
+      }
     };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm.pass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      ruleForm: {
+        pass: "",
+        checkPass: "",
+        name: "",
+      },
+      rules: {
+           name:[
+              {required:true,message:'请输入帐号',trigger:'blur'},
+              {min:6,max:10,message:"长度在6-10个字符之间且不要输入特殊字符",trigger:'blur' }],
+        pass: [
+          { validator: validatePass, trigger: "blur" },
+          {
+            min: 6,
+            max: 10,
+            message: "长度在6-10个字符之间且不要输入特殊字符",
+            trigger: "blur",
+          },
+        ],
+        checkPass: [{ validator: validatePass2, trigger: "blur" }],
+      },
+    };
+  },
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">
-
-  .bg{
-      margin: auto;
-      position: absolute;
-      height: 60%;
-      top:10%;
-      left: 30%;
-      min-width: 40%;
-      min-height: 30%;
-      background-color: rgba(224, 226, 223, 0.8);
-    }  
-  .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .tips {
+.register-container {
+  h2 {
+      margin-left:15% ;
+    color: rgb(104, 94, 192);
+    display: block;
     text-align: center;
-    font-size:14px;
-    color: rgb(19, 18, 18);
-    margin-bottom: 10px;
-    a{
-        color: rgb(14, 13, 13);
-        text-decoration: blue;
-    }
-    a:hover{
-        color: rgb(33, 115, 148);
-    }
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
+    font-size: 30px;
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+      "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+  .el-form {
+    margin-left: 10%;
+    margin-top: 10%;
+    width: 80%;
+     .el-button{
+        width: 320px;
     }
   }
-
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: #889aa4;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: rgb(46, 112, 199);
-      margin: 0px auto 40px auto;
+  p{
+      margin-left:15% ;
       text-align: center;
-      font-weight: bold;
-    }
   }
-
-
+}
 </style>
