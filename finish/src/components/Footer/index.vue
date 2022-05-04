@@ -13,8 +13,9 @@
 
 <style scoped lang="less">
     #footer{
+        background-color: #ffffff;
         position:fixed;
-        left: 45%;
+        width: 100%;
         bottom:1%;
         span{
             font-size:20px;

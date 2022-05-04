@@ -7,9 +7,11 @@
     text-color="black"
     active-text-color="rgb(103, 100, 243)"
   >
-    <el-menu-item index="1" @click="back">我的问卷</el-menu-item>
-    <el-menu-item index="2" @click="userManage">个人中心</el-menu-item>
-    <el-menu-item index="3" disabled><a target="_blank">用户管理</a></el-menu-item>
+    <el-menu-item index="1" @click="back()">我的问卷</el-menu-item>
+    <el-menu-item index="2" @click="userManage()">个人中心</el-menu-item>
+    <el-menu-item index="3" disabled
+      ><a target="_blank">用户管理</a></el-menu-item
+    >
     <!--用户信息-->
     <el-header>
       <el-dropdown>
@@ -18,7 +20,7 @@
           <router-link to="/home/userinfo">
             <el-dropdown-item>我的帐号</el-dropdown-item></router-link
           >
-          <el-dropdown-item>修改信息</el-dropdown-item>
+          <el-dropdown-item><a href="http://www.moyuhuashui.site/#/README" target="_blank">客服帮助</a></el-dropdown-item>
           <el-dropdown-item @click.native="quit">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -28,6 +30,7 @@
 </template>
 
 <script>
+import throttle from 'lodash'
 export default {
   name: "Header",
   data() {
@@ -36,17 +39,20 @@ export default {
     };
   },
   methods: {
-      back(){
-          this.$router.push("/home")
-      },
+    back() {
+      this.$router.push("/home/questionlist",(err)=>{
+
+      });
+    },
     userManage() {
-      this.$router.push("/home/userinfo");
+      this.$router.push("/home/userinfo/items",(err)=>{});
     },
     handleSelect() {
       console.log("header");
     },
     myinfo() {
-      this.$router.push("/home/userinfo");
+      this.$router.push("/home/userinfo/items",(err)=>{
+      });
     },
     quit() {
       this.$notify({
@@ -54,6 +60,7 @@ export default {
         message: "你已经成功退出",
         type: "success",
       });
+      localStorage.setItem('user','');
       this.$router.push("/login");
     },
   },

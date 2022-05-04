@@ -36,7 +36,7 @@
         <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
       </el-form-item>
     </el-form>
-     <p>还没有帐号？点我前去<router-link to="/logreg/login">登录</router-link></p>
+     <p>已经有帐号了？点我前去<router-link to="/logreg/login">登录</router-link></p>
   </div>
 </template>
 

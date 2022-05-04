@@ -5,17 +5,18 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import "@/assets/global.css"
 import  request from "@/api/requset"
-
+import store from "@/store"
 
 Vue.config.productionTip = false;
 Vue.prototype.request=request;
 Vue.use(ElementUI);
 
-new Vue({
+const vm=new Vue({
   router,
+  store,
   render: h => h(App),
   beforeCreate() {
       Vue.prototype.$bus=this;
-      console.log(this);
   },
 }).$mount('#app')
+console.log(vm);
