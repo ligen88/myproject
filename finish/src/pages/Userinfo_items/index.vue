@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-main>
-      <p>用户信息</p>
+      <p>个人信息</p>
       <el-divider></el-divider>
         <el-descriptions
             class="margin-top"

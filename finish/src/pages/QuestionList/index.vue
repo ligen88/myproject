@@ -8,58 +8,45 @@
       <div class="other">
         <router-link to="/register"><el-link>创建</el-link></router-link>
         <router-link to="/login"><el-link>登录</el-link></router-link>
-        <router-link to="/home/userinfo/items"><el-link>主页</el-link></router-link>
+        <router-link to="/home/userinfo/items"
+          ><el-link>主页</el-link></router-link
+        >
       </div>
     </el-aside>
     <el-main>
-      <span><em>问卷列表</em></span>
+      <span>问卷列表</span>
       <el-button type="primary" icon="el-icon-search">搜索</el-button>
       <el-input
         v-model="search"
         placeholder="请输入要查询的内容"
-        icon="el-icon-search"></el-input>
+        icon="el-icon-search">
+        </el-input>
       <el-divider></el-divider>
-      <div>
-        <el-empty v-show="false"></el-empty>
-        <template>
-          <el-table  style="width: 100%">
-            <el-table-column label="日期" width="180">
-              <template slot-scope="scope">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="姓名" width="180">
-              <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                  </div>
-                </el-popover>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)"
-                  >编辑</el-button
-                >
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                  >删除</el-button
-                >
-              </template>
-            </el-table-column>
-          </el-table>
-        </template>
-        </div></el-main>
-        </el-container>
-        </template>
+      <div class="questionCard" v-for="list in list" :key="list.id">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header" class="clearfix">
+            <span>问卷名称</span>
+            <div class="tags">
+                <el-tag size="mini" type="info">问卷id</el-tag>
+                <el-tag size="mini" type="info">问卷状态</el-tag>
+                <el-tag size="mini" type="info">问卷数量</el-tag>
+                <el-tag size="mini" type="info">问卷发布时间</el-tag>
+            </div>
+          </div>
+          <div class="questionAbout">
+              <el-link href="https://element.eleme.io" target="_blank" icon='el-icon-edit'>问卷设计</el-link>
+              <el-link href="https://element.eleme.io" target="_blank" icon='el-icon-document'>问卷统计</el-link>
+              <el-link href="https://element.eleme.io" target="_blank" icon='el-icon-share'>问卷分享</el-link>
+          </div>
+          <div class="crud">
+              <el-button type="primary" icon='el-icon-close'>停止</el-button>
+             <el-button type="primary" icon='el-icon-delete'>删除</el-button>
+          </div>
+        </el-card>
+      </div>
+    </el-main>
+  </el-container>
+</template>
       </div>
     </el-main>
   </el-container>
@@ -70,7 +57,11 @@ export default {
   name: "QuestionList",
   data() {
     return {
-      
+      list:[
+          {id:1},
+          {id:3},
+          {id:3},
+          ],
       search: "",
       size: "",
     };
@@ -158,10 +149,61 @@ export default {
   .el-main {
     margin-top: 10px;
     span {
-      font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+      font:normal bold 30px "Helvetica Neue", Helvetica, "PingFang SC",
         "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-      font-size: 30px;
     }
+    .questionCard {
+        margin: 20px 0px;
+        span{
+            font:normal normal 25px "Helvetica Neue", Helvetica, "PingFang SC",
+            "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+        }
+      .text {
+        font-size: 10px;
+      }
+
+      .item {
+        margin-bottom: 18px;
+      }
+
+      .clearfix:before,
+      .clearfix:after {
+        display: table;
+        content: "";
+      }
+      .clearfix:after {
+        clear: both;
+      }
+
+      .box-card {
+        height:16vh;
+        width:100%;
+        .tags{
+            margin-top:10px;
+            float: right;
+            .el-tag{
+                font-size: 10px;
+            }
+        }
+        .questionAbout{
+            float: left;
+            .el-link{
+                float: left;
+                margin: 15px 15px 15px 7px;
+                font-size: 20px;
+            }
+        }
+        .crud{
+            float: right;
+            .el-icon-delete{
+                 margin-top: 10px;
+                 float: left;
+                 font-size:20px;
+            }
+        }
+      }
+    }
+    
     .el-button {
       margin-left: 10px;
       display: flex;

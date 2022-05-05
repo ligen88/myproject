@@ -5,8 +5,10 @@
 </template>
 
 <script>
+import Display from '@/pages/Display'
 export default {
     name:"Question",
+    components:{Display}
 }
 </script>
 
