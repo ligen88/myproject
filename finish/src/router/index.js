@@ -48,14 +48,13 @@ const routes = [
     },
 
     {
-        name: "question",
         path: "/question",
         meta: { auth: true },
         component: () => import('@/pages/Question'),
     },
     {
         path: "*",
-        redirect: "/logreg/login"
+        redirect: "/home/questionlist"
     }
 
 

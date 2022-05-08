@@ -11,12 +11,11 @@ Vue.config.productionTip = false;
 Vue.prototype.request=request;
 Vue.use(ElementUI);
 
-const vm=new Vue({
+new Vue({
   router,
   store,
   render: h => h(App),
   beforeCreate() {
-      Vue.prototype.$bus=this;
+      Vue.prototype.$bus=this
   },
 }).$mount('#app')
-console.log(vm);

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container class="outer">
-      <el-aside width="15%">
+      <el-aside width="20%">
         <el-row class="tac">
           <el-col :span="24">
             <el-menu 

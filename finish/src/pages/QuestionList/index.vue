@@ -4,12 +4,11 @@
       <div id="create">
         <el-link target="_blank" @click="createQuestion">+创建问卷</el-link>
       </div>
-
       <div class="other">
         <router-link to="/register"><el-link>创建</el-link></router-link>
         <router-link to="/login"><el-link>登录</el-link></router-link>
         <router-link to="/home/userinfo/items"
-          ><el-link>主页</el-link></router-link
+          ><el-link>{{qlist}}</el-link></router-link
         >
       </div>
     </el-aside>
@@ -19,54 +18,56 @@
       <el-input
         v-model="search"
         placeholder="请输入要查询的内容"
-        icon="el-icon-search">
-        </el-input>
+      >
+      </el-input>
       <el-divider></el-divider>
-      <div class="questionCard" v-for="list in list" :key="list.id">
-        <el-card class="box-card" shadow="hover">
+      <div class="questionCard" v-for="item in qlist" :key="item.id" >
+        <el-card class="box-card" shadow="hover" v-if="!item.isdel">
           <div slot="header" class="clearfix">
-            <span>问卷名称</span>
+            <span>{{item.title}}</span>
             <div class="tags">
-                <el-tag size="mini" type="info">问卷id</el-tag>
-                <el-tag size="mini" type="info">问卷状态</el-tag>
-                <el-tag size="mini" type="info">问卷数量</el-tag>
-                <el-tag size="mini" type="info">问卷发布时间</el-tag>
+              <el-tag size="mini" type="info">{{item.id}}</el-tag>
+              <el-tag size="mini" type="info">{{item.state}}</el-tag>
+              <el-tag size="mini" type="info">{{item.time}}</el-tag>
             </div>
           </div>
           <div class="questionAbout">
-              <el-link href="https://element.eleme.io" target="_blank" icon='el-icon-edit'>问卷设计</el-link>
-              <el-link href="https://element.eleme.io" target="_blank" icon='el-icon-document'>问卷统计</el-link>
-              <el-link href="https://element.eleme.io" target="_blank" icon='el-icon-share'>问卷分享</el-link>
+            <el-link @click="qdesign(item)" icon="el-icon-edit">问卷设计</el-link>
+            <el-link icon="el-icon-document">问卷统计</el-link>
+            <el-link icon="el-icon-share">问卷分享</el-link>
           </div>
           <div class="crud">
-              <el-button type="primary" icon='el-icon-close'>停止</el-button>
-             <el-button type="primary" icon='el-icon-delete'>删除</el-button>
+            <el-button type="primary" icon="el-icon-close">停止</el-button>
+            <el-button type="primary" icon="el-icon-delete" @click='delqlist(item)'>删除</el-button>
           </div>
         </el-card>
       </div>
     </el-main>
   </el-container>
 </template>
-      </div>
-    </el-main>
-  </el-container>
-</template>
+
 
 <script>
+import {nanoid} from 'nanoid'
+import{mapState} from'vuex'
 export default {
   name: "QuestionList",
   data() {
     return {
-      list:[
-          {id:1},
-          {id:3},
-          {id:3},
-          ],
       search: "",
       size: "",
+      cretitle:'',
+  
     };
   },
+  computed:{
+      ...mapState('user',['uid','title','state','qlist'])
+  },
   methods: {
+    qdesign(item) {
+       this.$bus.$emit('bus',item);
+       this.$router.push('/question')
+    },
     // load() {
     //   request
     //     .post("http://127.0.0.1:8088/api/login", {
@@ -87,6 +88,15 @@ export default {
         inputErrorMessage: "输入不对哦",
       })
         .then(({ value }) => {
+          if(!value){
+            this.$message({
+                type: "error",
+                message: "不能为空",
+            });
+          return
+          }
+          const qObj={id:nanoid(),title:value,state:'还没完成',time:Date.now(),isdel:false}
+          this.qlist.unshift(qObj);
           this.$message({
             type: "success",
             message: "您已经成功创建了问卷 ",
@@ -97,6 +107,24 @@ export default {
             type: "info",
             message: "取消创建",
           });
+        });
+    },
+    delqlist(item){
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          item.isdel=true;
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
         });
     },
   },
@@ -149,15 +177,15 @@ export default {
   .el-main {
     margin-top: 10px;
     span {
-      font:normal bold 30px "Helvetica Neue", Helvetica, "PingFang SC",
-        "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+      font-weight: bold;
+      font-size: 30px;
     }
     .questionCard {
-        margin: 20px 0px;
-        span{
-            font:normal normal 25px "Helvetica Neue", Helvetica, "PingFang SC",
-            "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-        }
+      margin: 20px 0px;
+      span {
+        font-weight: normal;
+        font-size: 25px;
+      }
       .text {
         font-size: 10px;
       }
@@ -176,34 +204,34 @@ export default {
       }
 
       .box-card {
-        height:16vh;
-        width:100%;
-        .tags{
-            margin-top:10px;
-            float: right;
-            .el-tag{
-                font-size: 10px;
-            }
+        height: 16vh;
+        width: 100%;
+        .tags {
+          margin-top: 10px;
+          float: right;
+          .el-tag {
+            font-size: 10px;
+          }
         }
-        .questionAbout{
+        .questionAbout {
+          float: left;
+          .el-link {
             float: left;
-            .el-link{
-                float: left;
-                margin: 15px 15px 15px 7px;
-                font-size: 20px;
-            }
+            margin: 15px 15px 15px 7px;
+            font-size: 20px;
+          }
         }
-        .crud{
-            float: right;
-            .el-icon-delete{
-                 margin-top: 10px;
-                 float: left;
-                 font-size:20px;
-            }
+        .crud {
+          float: right;
+          .el-icon-delete {
+            margin-top: 10px;
+            float: left;
+            font-size: 20px;
+          }
         }
       }
     }
-    
+
     .el-button {
       margin-left: 10px;
       display: flex;

@@ -16,12 +16,12 @@ export default {
       Header,
       Footer
   },
-  mounted(){
-       request.get("http://127.0.0.1:8088/api/userinfo").
-       then((res)=>{
-           console.log(res);
-    });
-  }
+//   mounted(){
+//        request.get("http://127.0.0.1:8088/api/userinfo").
+//        then((res)=>{
+//            console.log(res);
+//     });
+//   }
 };
 </script>
 
