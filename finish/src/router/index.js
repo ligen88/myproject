@@ -41,22 +41,28 @@ const routes = [
             },
             {
                 path: "questionlist",
-                component: () => import('@/pages/QuestionList')
-            }
+                component: () => import('@/pages/QuestionList'),
+            
+            },
         ]
 
     },
 
-    {
+    {   
+        name:"question",
         path: "/question",
         meta: { auth: true },
         component: () => import('@/pages/Question'),
     },
     {
-        path: "*",
-        redirect: "/home/questionlist"
-    }
+        path:"/display",
+        component:()=>import('@/pages/Display')
 
+    },
+    {
+        path: "*",
+        redirect: "/display"
+    },
 
 ]
 

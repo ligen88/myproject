@@ -13,39 +13,30 @@
                 <i class="el-icon-user"></i>
                 用户名
             </template>
-            {{User.nickname}}
+            {{nickname}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-mobile-phone"></i>
                 手机号
             </template>
-            {{User.phone}}
-            </el-descriptions-item>
-            <el-descriptions-item>
-            <template slot="label">
-                <i class="el-icon-location-outline"></i>
-                居住地
-            </template>
-             {{User.address}}
+            {{phone}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-tickets"></i>
                 备注
             </template>
-            <el-tag size="small"> {{User.information}}</el-tag>
+            <el-tag size="small"> {{info}}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-office-building"></i>
                 联系地址
             </template>
-             {{User.address}}
+             {{address}}
             </el-descriptions-item>
         </el-descriptions>
-      <!-- <h2>{{ num }}</h2>
-      <button @click="add(1)">点我增加1</button> -->
       <div id="main"></div>
     </el-main>
   </el-container>
@@ -59,41 +50,31 @@ export default {
   name: "items",
   data() {
       return {
-          User:{
-              nickname:'帅哥',
-              phone:'15526272341',
-              address:'',
-              gender:'565656',
-              information:'2323',
-          }
       }
   },
-//   methods: {
-//     ...mapActions("countAbout", { add: "jia" }),
-//   },
-//   computed: {
-//     ...mapState("countAbout", ["num"]),
-//   },
-//   mounted() {
-//     var chartDom = document.getElementById("main");
-//     var myChart = echarts.init(chartDom);
-//     var option = {
-//       xAxis: {
-//         type: "category",
-//         data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-//       },
-//       yAxis: {
-//         type: "value",
-//       },
-//       series: [
-//         {
-//           data: [120, 200, 150, 80, 70, 110, 130],
-//           type: "bar",
-//         },
-//       ],
-//     };
-//     myChart.setOption(option);
-//   },
+  computed: {
+    ...mapState("user", ['phone','nickname','address','info']),
+  },
+  mounted() {
+    var chartDom = document.getElementById("main");
+    var myChart = echarts.init(chartDom);
+    var option = {
+      xAxis: {
+        type: "category",
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      },
+      yAxis: {
+        type: "value",
+      },
+      series: [
+        {
+          data: [120, 200, 150, 80, 70, 110, 130],
+          type: "bar",
+        },
+      ],
+    };
+    myChart.setOption(option);
+  },
 };
 </script>
 

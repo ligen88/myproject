@@ -12,7 +12,7 @@
                   <i class="el-icon-user"></i>
                   <span slot="title">个人信息</span>
               </el-menu-item>
-              <el-menu-item index="2">
+              <!-- <el-menu-item index="2">
                 <i class="el-icon-menu"></i>
                 <span slot="title">测试2</span>
               </el-menu-item>
@@ -23,7 +23,7 @@
               <el-menu-item index="4">
                 <i class="el-icon-setting"></i>
                 <span slot="title">测试4</span>
-              </el-menu-item>
+              </el-menu-item> -->
             </el-menu>
           </el-col>
         </el-row>

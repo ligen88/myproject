@@ -8,9 +8,9 @@
         <el-link @click="back"><i class="el-icon-tickets"></i>返回</el-link>
       </el-aside>
       <el-main>
-        <h1>{{title}}</h1>
+        <h1>{{root.title}}</h1>
         <el-divider></el-divider>
-        <div class="questionCard" v-for="item in question" :key="item.id">
+        <div class="questionCard" v-for="item in root.question" :key="item.id">
           <el-card class="box-card" shadow="hover" v-if="!item.isdel">
             <div slot="header" class="clearfix">
                 <p>问题号{{item.id}}</p>
@@ -28,7 +28,7 @@
             center
             > 
             <span>题目名称</span> <el-input v-model="item.title" placeholder=""></el-input>
-            <div v-if="item.type!=='textarea'" class="more" v-for="(select, index) in item.option" :key="index">
+            <div v-show="item.type!=='textarea'" class="more" v-for="(select, index) in item.option" :key="index">
                 <span>第{{index+1}}个选项</span> <el-input v-model="select.title" placeholder="不能为空"></el-input>
                 <el-button  @click="deloption(item.option,index)">删除选项</el-button>
             </div>
@@ -38,10 +38,10 @@
                 <el-button type="primary" @click="item.visible = false">确 定</el-button>
             </span>
             </el-dialog>
-            <el-radio-group v-if="item.type=='radio'" v-for="(select, index) in item.option" :key="index">
+            <el-radio-group v-show="item.type=='radio'" v-for="(select, index) in item.option" :key="index">
               <el-radio >{{ select.title }}</el-radio>
             </el-radio-group>
-            <el-checkbox-group v-if="item.type=='checkbox'" v-for="(select, index) in item.option" :key="index" >
+            <el-checkbox-group v-show="item.type=='checkbox'" v-for="(select, index) in item.option" :key="index" >
                 <el-checkbox label="禁用" disabled>{{select.title}}</el-checkbox>
             </el-checkbox-group>
             <el-input v-if="item.type=='textarea'"
@@ -71,25 +71,25 @@
 
 <script>
 import { nanoid } from "nanoid";
-import pubsub from 'pubsub-js'
+import {mapState,mapGetters} from 'vuex'
 export default {
   name: "Question",
   data() {
     return {
-      title:'1',
+      root:'',
       Visible: [],
-      question: [],
     };
   },
+  computed:{
+      ...mapState('user',['qlist','question']),
+      ...mapGetters('user',['questions'])
+  },
   methods: {
+
     addsingle() {
       const qObj = {
-        id: nanoid(),
         title: "",
-        state: "还没完成",
-        time: Date.now(),
         isdel: false,
-        num: 1,
         radio: "暂时为空",
         type: "radio",
         visible:false,
@@ -98,41 +98,35 @@ export default {
           { },
         ],
       };
-      this.question.push(qObj);
+      this.root.question.push(qObj);
     },
     addmulti() {
       const qObj = {
-        id: nanoid(),
-        title: "",
-        state: "还没完成",
-        time: Date.now(),
+       title: "",
         isdel: false,
-        num: 1,
         radio: "暂时为空",
         type: "checkbox",
         visible:false,
+        text:'',
         option: [
           { },
         ],
       };
-      this.question.push(qObj);
+      this.root.question.push(qObj);
     },
     addtext(){
         const qObj = {
-        id: nanoid(),
         title: "",
-        state: "还没完成",
-        time: Date.now(),
         isdel: false,
-        num: 1,
         radio: "暂时为空",
         type: "textarea",
         visible:false,
+        text:'',
         option: [
           { },
         ],
       };
-      this.question.push(qObj);
+      this.root.question.push(qObj);
     },
     delqlist(item) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -178,14 +172,11 @@ export default {
     },
   },
   mounted(){
-      this.$bus.$on('bus',(data)=>{
-         console.log(data);
-      })
-      console.log(this.Visible);
-  },
-  beforeDestroy(){
-      this.$bus.$off('bus');
+      this.root=this.$route.params.item;
+      console.log(this.root);
   }
+
+
 };
 </script>
 

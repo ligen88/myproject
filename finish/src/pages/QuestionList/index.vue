@@ -7,9 +7,6 @@
       <div class="other">
         <router-link to="/register"><el-link>创建</el-link></router-link>
         <router-link to="/login"><el-link>登录</el-link></router-link>
-        <router-link to="/home/userinfo/items"
-          ><el-link>{{qlist}}</el-link></router-link
-        >
       </div>
     </el-aside>
     <el-main>
@@ -50,14 +47,13 @@
 <script>
 import {nanoid} from 'nanoid'
 import{mapState} from'vuex'
+import dayjs from 'dayjs'
 export default {
   name: "QuestionList",
   data() {
     return {
       search: "",
       size: "",
-      cretitle:'',
-  
     };
   },
   computed:{
@@ -65,8 +61,7 @@ export default {
   },
   methods: {
     qdesign(item) {
-       this.$bus.$emit('bus',item);
-       this.$router.push('/question')
+       this.$router.push({name:'question',params:{item}});
     },
     // load() {
     //   request
@@ -95,7 +90,26 @@ export default {
             });
           return
           }
-          const qObj={id:nanoid(),title:value,state:'还没完成',time:Date.now(),isdel:false}
+          const qObj={ id:nanoid(),
+            //问卷标题
+            title:value,
+            state:'还没完成',
+            time:dayjs().format('YYYY年MM月DD日HH时mm分ss秒'),
+            isdel:false,
+            question:[
+                {   //问题标题
+                    qtitle: "",
+                    isdel: false,
+                    //问题的类型 radio checkbox textarea 三选一
+                    type: "radio",
+                    visible:false,
+                    text:'',
+                    //问题选项相关
+                    option: [
+                      {},
+                    ],
+                  }
+            ]}
           this.qlist.unshift(qObj);
           this.$message({
             type: "success",

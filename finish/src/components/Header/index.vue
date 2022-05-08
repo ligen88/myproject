@@ -17,7 +17,7 @@
       <el-dropdown>
         <i class="el-icon-user-solid"></i>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/home/userinfo">
+          <router-link to="/home/userinfo/items">
             <el-dropdown-item>我的帐号</el-dropdown-item></router-link
           >
           <el-dropdown-item><a href="http://www.moyuhuashui.site/#/README" target="_blank">客服帮助</a></el-dropdown-item>
