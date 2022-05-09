@@ -24,17 +24,17 @@
             <span>{{item.title}}</span>
             <div class="tags">
               <el-tag size="mini" type="info">{{item.id}}</el-tag>
-              <el-tag size="mini" type="info">{{item.state}}</el-tag>
-              <el-tag size="mini" type="info">{{item.time}}</el-tag>
+              <el-tag size="mini" type="warning">{{item.state}}</el-tag>
+              <el-tag size="mini" type="danger">{{item.time}}</el-tag>
             </div>
           </div>
           <div class="questionAbout">
             <el-link @click="qdesign(item)" icon="el-icon-edit">问卷设计</el-link>
             <el-link icon="el-icon-document">问卷统计</el-link>
-            <el-link icon="el-icon-share">问卷分享</el-link>
+            <el-link icon="el-icon-share" @click="share(item)">问卷填写</el-link>
           </div>
           <div class="crud">
-            <el-button type="primary" icon="el-icon-close">停止</el-button>
+            <el-button type="primary" icon="el-icon-open" @click.once="send(item)">发布</el-button>
             <el-button type="primary" icon="el-icon-delete" @click='delqlist(item)'>删除</el-button>
           </div>
         </el-card>
@@ -93,7 +93,7 @@ export default {
           const qObj={ id:nanoid(),
             //问卷标题
             title:value,
-            state:'还没完成',
+            state:'设计中',
             time:dayjs().format('YYYY年MM月DD日HH时mm分ss秒'),
             isdel:false,
             question:[
@@ -141,7 +141,29 @@ export default {
           });          
         });
     },
+    send(item){
+        item.state="已发布",
+         this.$message({
+            type: 'success',
+            message: '发布成功!'
+          });
+    },
+    share(item){
+        if(item.state!="已发布"){
+            this.$message({
+                type:"error",
+                message:"你还没有发布"
+            })
+        }
+        else{
+            alert(item.state);
+        }
+    }
   },
+  mounted(){
+      console.log(this);
+      this.$store.dispatch('user/getuserinfo')
+  }
 };
 </script>
 

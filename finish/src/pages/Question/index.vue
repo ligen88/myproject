@@ -39,7 +39,7 @@
             </span>
             </el-dialog>
             <el-radio-group v-show="item.type=='radio'" v-for="(select, index) in item.option" :key="index">
-              <el-radio >{{ select.title }}</el-radio>
+              <el-radio :label="item.id">{{ select.title }}</el-radio>
             </el-radio-group>
             <el-checkbox-group v-show="item.type=='checkbox'" v-for="(select, index) in item.option" :key="index" >
                 <el-checkbox label="禁用" disabled>{{select.title}}</el-checkbox>

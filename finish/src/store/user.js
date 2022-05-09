@@ -4,22 +4,37 @@ import { nanoid } from "nanoid"
 const user={
     namespaced:true,
     actions:{
+        getuserinfo(ministore,value){
+            request.post("http://127.0.0.1:8088/api/userinfo",{}).then((res)=>{
+                ministore.commit("GETUSERINFO",res.data);
+                console.log(res.data);
+            })
+        }
     },
     mutations:{
+        GETUSERINFO(state,value){
+            var{address,age,gender,name,info,nickname,phone,qlist}=value
+            state.address=address
+            state.age=age
+            state.gender=gender
+            state.name=name
+            state.nickname=nickname
+            state.qlist=qlist;
+        }
     },
     state:{
-        info:'帅哥',
+        info:'不对劲',
         uid:nanoid(),
         phone:'15562672341',
-        nickname:'小帅哥蛮这不是',
-        address:"山东女子学院",
+        nickname:'大帅比',
+        address:"村里",
         //问卷
-        qlist:[
+        qlist:[ 
         {   //问卷id
             id:nanoid(),
             //问卷标题
             title:'这是一个样本',
-            state:'还没完成77',
+            state:'设计中',
             time:dayjs().format('YYYY年MM月DD日HH时mm分ss秒'),
             isdel:false,
             question:[
@@ -41,7 +56,7 @@ const user={
             id:nanoid(),
             //问卷标题
             title:'这是一个样本77',
-            state:'完成了',
+            state:'设计中',
             time:dayjs().format('YYYY年MM月DD日HH时mm分ss秒'),
             isdel:false,
             question:[

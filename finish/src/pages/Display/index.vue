@@ -2,23 +2,24 @@
   <div class="display">
       <h1>{{root.title}}</h1>
         <el-divider></el-divider>
-        <div class="questionCard" v-for="item in root.question" :key="item.id">
-          <el-card class="box-card" shadow="hover" v-if="!item.isdel">
+        <div class="questionCard" >
+          <el-card class="box-card" shadow="hover" >
             <div slot="header" class="clearfix">
-                <p>问题号{{item.id}}</p>
+                <p>问题号</p>
               <el-input
                 placeholder="题目名称"
-                v-model="item.title"
                 clearable
                 disabled
               ></el-input>
             </div>
-            <el-radio-group  v-for="(select, index) in item.option" :key="index">
-              <el-radio >{{ select.title }}</el-radio>
-            </el-radio-group>
-            <el-checkbox-group  v-for="(select, index) in item.option" :key="index" >
-                <el-checkbox label="禁用" disabled>{{select.title}}</el-checkbox>
-            </el-checkbox-group>
+            <!--区分组别-->
+                <el-radio v-show="type=='radio'" v-model="radio" v-for="i in radio1" :key="i" :label="i">{{i}}</el-radio>
+                <el-checkbox v-for="i in checklist" :key=i label="i">{{i}}</el-checkbox>
+            <el-input
+                placeholder="请输入内容"
+                v-model="input"
+                clearable>
+            </el-input>
           </el-card>
         </div>
   </div>
@@ -29,7 +30,11 @@ export default {
     name:"Display",
     data() {
         return {
-            root:{title:"这是一个标题"}
+            root:{title:"这是一个标题"},
+            checklist:['选项1','选项2','选项3','选项3'],
+            radio:'问题1',
+            radio1:['1','2','3','4'],
+            type:'radio'
         }
     },
 }
@@ -45,6 +50,10 @@ export default {
         .el-divider{
             background-color: rgb(131, 149, 255);
             height: 1vh;
+        }
+        .questionCard{
+            margin:0 auto;
+            width: 80%;
         }
     }
 </style>
