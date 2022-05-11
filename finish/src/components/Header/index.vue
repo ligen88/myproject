@@ -8,9 +8,8 @@
     active-text-color="rgb(103, 100, 243)"
   >
     <el-menu-item index="1" @click="back()">我的问卷</el-menu-item>
-    <el-menu-item index="2" @click="userManage()">个人中心</el-menu-item>
-    <el-menu-item index="3" disabled
-      ><a target="_blank">用户管理</a></el-menu-item
+    <el-menu-item index="2" @click="userInfo()">个人中心</el-menu-item>
+    <el-menu-item index="3" :disabled="!admin" @click="userManage()">用户管理</el-menu-item
     >
     <!--用户信息-->
     <el-header>
@@ -31,6 +30,7 @@
 
 <script>
 import throttle from 'lodash'
+import { mapState } from 'vuex';
 export default {
   name: "Header",
   data() {
@@ -38,14 +38,20 @@ export default {
       activeIndex2: "",
     };
   },
+  computed:{
+      ...mapState('user',['admin'])
+  },
   methods: {
     back() {
       this.$router.push("/home/questionlist",(err)=>{
 
       });
     },
-    userManage() {
+    userInfo() {
       this.$router.push("/home/userinfo/items",(err)=>{});
+    },
+    userManage(){
+        this.$router.push("/home/usermanage",(err)=>{})
     },
     handleSelect() {
       console.log("header");

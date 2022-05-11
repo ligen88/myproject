@@ -13,13 +13,14 @@ const user={
     },
     mutations:{
         GETUSERINFO(state,value){
-            var{address,age,gender,name,info,nickname,phone,qlist}=value
+            var{address,age,gender,name,info,nickname,phone,qlist,status,admin}=value
             state.address=address
             state.age=age
             state.gender=gender
             state.name=name
             state.nickname=nickname
             state.qlist=qlist;
+            state.admin=admin;
         }
     },
     state:{
@@ -28,12 +29,14 @@ const user={
         phone:'15562672341',
         nickname:'大帅比',
         address:"村里",
+        admin:true,
         //问卷
         qlist:[ 
         {   //问卷id
             id:nanoid(),
             //问卷标题
             title:'这是一个样本',
+            num:0,
             state:'设计中',
             time:dayjs().format('YYYY年MM月DD日HH时mm分ss秒'),
             isdel:false,
@@ -57,6 +60,7 @@ const user={
             //问卷标题
             title:'这是一个样本77',
             state:'设计中',
+            num:0,
             time:dayjs().format('YYYY年MM月DD日HH时mm分ss秒'),
             isdel:false,
             question:[

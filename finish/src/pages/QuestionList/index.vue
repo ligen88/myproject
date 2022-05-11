@@ -11,7 +11,7 @@
     </el-aside>
     <el-main>
       <span>问卷列表</span>
-      <el-button type="primary" icon="el-icon-search">搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="searchOne">搜索</el-button>
       <el-input
         v-model="search"
         placeholder="请输入要查询的内容"
@@ -23,15 +23,17 @@
           <div slot="header" class="clearfix">
             <span>{{item.title}}</span>
             <div class="tags">
+              
               <el-tag size="mini" type="info">{{item.id}}</el-tag>
               <el-tag size="mini" type="warning">{{item.state}}</el-tag>
+              <el-tag size="mini" type="info">数量:{{item.num}}</el-tag>
               <el-tag size="mini" type="danger">{{item.time}}</el-tag>
             </div>
           </div>
           <div class="questionAbout">
             <el-link @click="qdesign(item)" icon="el-icon-edit">问卷设计</el-link>
-            <el-link icon="el-icon-document">问卷统计</el-link>
-            <el-link icon="el-icon-share" @click="share(item)">问卷填写</el-link>
+            <el-link icon="el-icon-document" >问卷统计</el-link>
+            <el-link icon="el-icon-share" @click="qwrite(item)">问卷填写</el-link>
           </div>
           <div class="crud">
             <el-button type="primary" icon="el-icon-open" @click.once="send(item)">发布</el-button>
@@ -57,11 +59,42 @@ export default {
     };
   },
   computed:{
-      ...mapState('user',['uid','title','state','qlist'])
+      ...mapState('user',['uid','title','state','qlist','num'])
   },
   methods: {
     qdesign(item) {
-       this.$router.push({name:'question',params:{item}});
+       if(item.state=="已发布"){
+            this.$message({
+                type:"error",
+                message:"你已经发布了该问卷，请先停止该问卷"
+            })
+        }
+        else{
+            this.$router.push({name:'question',params:{item}})
+        };
+    },
+    qwrite(item){
+        if(item.state!="已发布"){
+            this.$message({
+                type:"error",
+                message:"你还没有发布"
+            })
+        }
+        else{
+            this.$router.push({name:'display',params:{item}});
+        }
+    },
+    qsta(item){
+
+    },
+    searchOne(){
+       if(this.search){
+           alert(this.search)
+           console.log(this.qlist);
+           for(let i in this.qlist){
+               console.log(this.qlist[i].title);
+           }
+       }
     },
     // load() {
     //   request
@@ -94,6 +127,7 @@ export default {
             //问卷标题
             title:value,
             state:'设计中',
+            num:0,
             time:dayjs().format('YYYY年MM月DD日HH时mm分ss秒'),
             isdel:false,
             question:[
@@ -148,17 +182,7 @@ export default {
             message: '发布成功!'
           });
     },
-    share(item){
-        if(item.state!="已发布"){
-            this.$message({
-                type:"error",
-                message:"你还没有发布"
-            })
-        }
-        else{
-            alert(item.state);
-        }
-    }
+
   },
   mounted(){
       console.log(this);

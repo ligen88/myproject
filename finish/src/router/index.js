@@ -44,6 +44,11 @@ const routes = [
                 component: () => import('@/pages/QuestionList'),
             
             },
+            {
+                path:"usermanage",
+                component:()=>import('@/pages/Usermanage')
+        
+            },
         ]
 
     },
@@ -54,14 +59,14 @@ const routes = [
         meta: { auth: true },
         component: () => import('@/pages/Question'),
     },
-    {
+    {   
+        name:"display",
         path:"/display",
         component:()=>import('@/pages/Display')
-
     },
     {
         path: "*",
-        redirect: "/display"
+        redirect: "/logreg/login"
     },
 
 ]
