@@ -2,41 +2,53 @@
   <div class="display">
       <h1>{{root.title}}</h1>
         <el-divider></el-divider>
-        <div class="questionCard" >
-          <el-card class="box-card" shadow="hover" >
+        <el-main>
+            <div class="questionCard"  v-for="item,index in root.question" :key="index">
+            <el-card class="box-card" shadow="hover" v-show="!item.isdel">
             <div slot="header" class="clearfix">
-                <p>问题号</p>
-              <el-input
-                placeholder="题目名称"
-                clearable
-                disabled
-              ></el-input>
+                <p>问题</p>
+              <el-input v-model="item.title" disabled></el-input>
             </div>
             <!--区分组别-->
-                <el-radio v-show="type=='radio'" v-model="radio" v-for="i in radio1" :key="i" :label="i">{{i}}</el-radio>
-                <el-checkbox v-for="i in checklist" :key=i label="i">{{i}}</el-checkbox>
+ 
+                <el-radio-group v-model="item.qtitle">
+                    <el-radio v-show="item.type=='radio'"  v-for="select in item.option" :key="select.id"  :label="select.title">{{select.title}}</el-radio>
+                </el-radio-group>           
+                <el-checkbox v-show="item.type=='checkbox'" v-for="select in item.option" :key="select.id" :label="select.title">{{select.title}}</el-checkbox>
             <el-input
+                v-show="item.type=='textarea'"
                 placeholder="请输入内容"
-                v-model="input"
+                v-model="item.text"
                 clearable>
             </el-input>
-          </el-card>
+
+            </el-card>
+          <el-button type="primary" @click="submit">点击提交</el-button>
         </div>
+        </el-main>
   </div>
 </template>
 
 <script>
+import{mapState,mapGetters} from 'vuex'
 export default {
     name:"Display",
     data() {
         return {
-            root:{title:"这是一个标题"},
-            checklist:['选项1','选项2','选项3','选项3'],
-            radio:'问题1',
-            radio1:['1','2','3','4'],
-            type:'radio'
+            root:'',
         }
     },
+    methods:{
+        submit(){
+            alert("提交成功");
+            this.root.num++;
+            this.$router.push("/home/questionlist");
+        }
+    },
+    mounted(){
+      this.root=this.$route.params.item;
+      console.log(this.root);
+  }
 }
 </script>
 
@@ -47,13 +59,24 @@ export default {
             font-size: 30px;
             text-align: center;
         }
+        .el-main{
+            height: 600px;
+        }
         .el-divider{
-            background-color: rgb(131, 149, 255);
+            background-color: rgb(191, 200, 255);
             height: 1vh;
         }
         .questionCard{
-            margin:0 auto;
+            margin:2vh auto;
             width: 80%;
+            .box-card{
+                border: 1px solid rgb(204, 204, 204);
+            }
+        }
+        .el-button{
+           position: fixed;
+           left: 47%;
+           top: 90%
         }
     }
 </style>

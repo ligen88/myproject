@@ -13,7 +13,7 @@ const user={
     },
     mutations:{
         GETUSERINFO(state,value){
-            var{address,age,gender,name,info,nickname,phone,qlist,status,admin}=value
+            var{address,age,gender,name,info,nickname,phone,qlist,status,admin,username}=value
             state.address=address
             state.age=age
             state.gender=gender
@@ -21,15 +21,17 @@ const user={
             state.nickname=nickname
             state.qlist=qlist;
             state.admin=admin;
+            state.username=username
         }
     },
     state:{
-        info:'不对劲',
+        username:'',
+        info:'如果该用户没有填写则显示这个',
         uid:nanoid(),
         phone:'15562672341',
         nickname:'大帅比',
         address:"村里",
-        admin:true,
+        admin:false,
         //问卷
         qlist:[ 
         {   //问卷id

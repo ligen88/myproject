@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import request from '@/api/requset'
 export default {
   name: "Register",
   data() {
@@ -90,7 +91,21 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          request.post("http://127.0.0.1:8088/api/register",{username:this.ruleForm.name,password:this.ruleForm.pass})
+          .then((res)=>{
+              if(res.status==200){
+                  this.$message({
+                      type:"success",
+                      message:"注册成功"
+                  })
+              }
+              else{
+                   this.$message({
+                      type:"error",
+                      message:"注册失败,用户名已存在或是输入不正确"
+                  })
+              }
+          })
         } else {
           console.log("error submit!!");
           return false;

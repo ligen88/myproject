@@ -8,12 +8,12 @@
         <el-link @click="back"><i class="el-icon-tickets"></i>返回</el-link>
       </el-aside>
       <el-main>
-        <h1>{{root.title}}</h1>
+        <h1>{{this.$route.params.item.title}}</h1>
         <el-divider></el-divider>
-        <div class="questionCard" v-for="item in root.question" :key="item.id">
+        <div class="questionCard" v-for="item in root" :key="item.id">
           <el-card class="box-card" shadow="hover" v-if="!item.isdel">
             <div slot="header" class="clearfix">
-                <p>问题号{{item.id}}</p>
+                <p>问题</p>
               <el-input
                 placeholder="题目名称"
                 v-model="item.title"
@@ -38,10 +38,10 @@
                 <el-button type="primary" @click="item.visible = false">确 定</el-button>
             </span>
             </el-dialog>
-            <el-radio-group v-show="item.type=='radio'" v-for="(select, index) in item.option" :key="index">
+            <el-radio-group v-show="item.type=='radio'" v-for="select in item.option" :key="select.id">
               <el-radio :label="item.id">{{ select.title }}</el-radio>
             </el-radio-group>
-            <el-checkbox-group v-show="item.type=='checkbox'" v-for="(select, index) in item.option" :key="index" >
+            <el-checkbox-group v-show="item.type=='checkbox'" v-for="select in item.option" :key="select.id" >
                 <el-checkbox label="禁用" disabled>{{select.title}}</el-checkbox>
             </el-checkbox-group>
             <el-input v-if="item.type=='textarea'"
@@ -72,18 +72,20 @@
 <script>
 import { nanoid } from "nanoid";
 import {mapState,mapGetters} from 'vuex'
+import request from '@/api/requset';
 export default {
   name: "Question",
   data() {
     return {
-      root:'',
+      root:[],
       Visible: [],
+      nowuser:'',
+      item:'',
+      qlist:'',
+      username:''
     };
   },
-  computed:{
-      ...mapState('user',['qlist','question']),
-      ...mapGetters('user',['questions'])
-  },
+
   methods: {
 
     addsingle() {
@@ -95,10 +97,11 @@ export default {
         visible:false,
         text:'',
         option: [
-          { },
+          {title:'',
+           num:0 },
         ],
       };
-      this.root.question.push(qObj);
+      this.root.push(qObj);
     },
     addmulti() {
       const qObj = {
@@ -109,10 +112,10 @@ export default {
         visible:false,
         text:'',
         option: [
-          { },
+          { title:'',num:0 },
         ],
       };
-      this.root.question.push(qObj);
+      this.root.push(qObj);
     },
     addtext(){
         const qObj = {
@@ -123,10 +126,10 @@ export default {
         visible:false,
         text:'',
         option: [
-          { },
+          { title:'',num:0 },
         ],
       };
-      this.root.question.push(qObj);
+      this.root.push(qObj);
     },
     delqlist(item) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -135,6 +138,7 @@ export default {
         type: "warning",
       })
         .then(() => {
+        
           item.isdel = true;
           this.$message({
             type: "success",
@@ -155,6 +159,7 @@ export default {
         const option={
             title:'',
             id:nanoid(),
+            num:0
         }
         options.push(option);   
     },
@@ -168,14 +173,36 @@ export default {
       }
     },
     back(){
-        this.$router.push('/home/questionlist')
+        this.$router.replace('/home/questionlist')
     },
   },
   mounted(){
-      this.root=this.$route.params.item;
-      console.log(this.root);
-  }
-
+       request.post("http://127.0.0.1:8088/api/userinfo").then((res)=>{
+           const{username}=res.data;
+           this.nowuser=username;
+       })       
+      this.root=this.$route.params.item.question;
+      this.item=this.$route.params.item
+     
+  },
+  beforeDestroy() {
+      request.post("http://127.0.0.1:8088/api/savequestion",{
+          username:this.nowuser,
+          question:this.root,
+          item:this.item
+      }).then((res)=>{
+          if(res.status==400){
+              console.log("不对");
+          }
+          else{
+                request.post("http://127.0.0.1:8088/api/userinfo").then((res)=>{
+                    this.qlist=res.data.qlist
+                    this.username=res.data.username;
+                })
+          }
+      })
+      
+  },
 
 };
 </script>

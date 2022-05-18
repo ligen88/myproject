@@ -61,8 +61,13 @@ const routes = [
     },
     {   
         name:"display",
-        path:"/display",
+        path:"/display/:id",
         component:()=>import('@/pages/Display')
+    },
+    {   
+        name:"charts",
+        path:"/charts",
+        component:()=>import('@/pages/Charts')
     },
     {
         path: "*",

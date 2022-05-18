@@ -11,12 +11,12 @@
     </el-aside>
     <el-main>
       <span>问卷列表</span>
-      <el-button type="primary" icon="el-icon-search" @click="searchOne">搜索</el-button>
+      <!-- <el-button type="primary" icon="el-icon-search" @click="searchOne">搜索</el-button>
       <el-input
         v-model="search"
         placeholder="请输入要查询的内容"
       >
-      </el-input>
+      </el-input> -->
       <el-divider></el-divider>
       <div class="questionCard" v-for="item in qlist" :key="item.id" >
         <el-card class="box-card" shadow="hover" v-if="!item.isdel">
@@ -32,11 +32,12 @@
           </div>
           <div class="questionAbout">
             <el-link @click="qdesign(item)" icon="el-icon-edit">问卷设计</el-link>
-            <el-link icon="el-icon-document" >问卷统计</el-link>
+            <el-link icon="el-icon-document" @click="qsta(item)">问卷统计</el-link>
             <el-link icon="el-icon-share" @click="qwrite(item)">问卷填写</el-link>
           </div>
           <div class="crud">
-            <el-button type="primary" icon="el-icon-open" @click.once="send(item)">发布</el-button>
+            <el-button type="primary" icon="el-icon-close" @click="stop(item)">停止</el-button>
+            <el-button type="primary" icon="el-icon-open" @click="send(item)">发布</el-button>
             <el-button type="primary" icon="el-icon-delete" @click='delqlist(item)'>删除</el-button>
           </div>
         </el-card>
@@ -50,16 +51,16 @@
 import {nanoid} from 'nanoid'
 import{mapState} from'vuex'
 import dayjs from 'dayjs'
+import request from '@/api/requset';
 export default {
   name: "QuestionList",
   data() {
     return {
       search: "",
       size: "",
+      qlist:'',
+      username:''
     };
-  },
-  computed:{
-      ...mapState('user',['uid','title','state','qlist','num'])
   },
   methods: {
     qdesign(item) {
@@ -85,14 +86,21 @@ export default {
         }
     },
     qsta(item){
-
+        //  if(item.num==0){
+        //       this.$message({
+        //         type:"error",
+        //         message:"你还没有答卷"
+        //     })
+        //     return
+        //  }
+         this.$router.push({name:'charts',params:{item}});
     },
     searchOne(){
        if(this.search){
-           alert(this.search)
-           console.log(this.qlist);
            for(let i in this.qlist){
-               console.log(this.qlist[i].title);
+               if(this.qlist[i].title==this.search){
+                console.log(this.qlist[i].title);
+               }
            }
        }
     },
@@ -126,7 +134,7 @@ export default {
           const qObj={ id:nanoid(),
             //问卷标题
             title:value,
-            state:'设计中',
+            state:"设计中",
             num:0,
             time:dayjs().format('YYYY年MM月DD日HH时mm分ss秒'),
             isdel:false,
@@ -140,22 +148,27 @@ export default {
                     text:'',
                     //问题选项相关
                     option: [
-                      {},
+                      {title:'',num:0},
                     ],
                   }
             ]}
-          this.qlist.unshift(qObj);
-          this.$message({
-            type: "success",
-            message: "您已经成功创建了问卷 ",
-          });
+          request.post("http://127.0.0.1:8088/api/addqlist",{username:this.username,qObj}).then((res)=>{
+              if(res.status==200){
+                   this.$message({
+                        type: "success",
+                        message: "您已经成功创建了问卷 ",
+                    });
+                    this.qlist.unshift(qObj);
+              }
+              else{
+                  this.$message({
+                        type: "error",
+                        message: "创建失败",
+                    });
+              }
+          })
+            
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "取消创建",
-          });
-        });
     },
     delqlist(item){
           this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -163,6 +176,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          request.post("http://127.0.0.1:8088/api/delqlist",{username:this.username,item})
           item.isdel=true;
           this.$message({
             type: 'success',
@@ -176,17 +190,46 @@ export default {
         });
     },
     send(item){
+        if(item.state=="已发布"){
+            this.$message({
+            type: 'error',
+            message: '该问卷已经发布,请不要重复发布!'
+          });
+          return
+        }
+        else{
+            request.post("http://127.0.0.1:8088/api/changelist2",{username:this.username,item})
         item.state="已发布",
          this.$message({
             type: 'success',
             message: '发布成功!'
           });
+        }
     },
+    stop(item){
+        if(item.state=="设计中"){
+            this.$message({
+            type: 'error',
+            message: '该问卷已经停止，请不要重复停止'
+          });
+          return
+        }
+        else{
+        request.post("http://127.0.0.1:8088/api/changelist",{username:this.username,item})
+        item.state="设计中"
+        this.$message({
+            type: 'success',
+            message: '该问卷已经停止成功!'
+          });
+        }
+    }
 
   },
   mounted(){
-      console.log(this);
-      this.$store.dispatch('user/getuserinfo')
+      request.post("http://127.0.0.1:8088/api/userinfo").then((res)=>{
+          this.qlist=res.data.qlist
+          this.username=res.data.username;
+    })
   }
 };
 </script>
