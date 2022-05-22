@@ -175,6 +175,9 @@ export default {
     back(){
         this.$router.replace('/home/questionlist')
     },
+    yes(){
+        this.item.visible=true;
+    }
   },
   mounted(){
        request.post("http://127.0.0.1:8088/api/userinfo").then((res)=>{
@@ -191,14 +194,14 @@ export default {
           question:this.root,
           item:this.item
       }).then((res)=>{
-          if(res.status==400){
-              console.log("不对");
-          }
-          else{
+          if(res.status==200){
                 request.post("http://127.0.0.1:8088/api/userinfo").then((res)=>{
                     this.qlist=res.data.qlist
                     this.username=res.data.username;
                 })
+          }
+          else{
+              console.log("失败了");
           }
       })
       

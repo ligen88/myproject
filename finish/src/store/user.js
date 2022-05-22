@@ -7,13 +7,12 @@ const user={
         getuserinfo(ministore,value){
             request.post("http://127.0.0.1:8088/api/userinfo",{}).then((res)=>{
                 ministore.commit("GETUSERINFO",res.data);
-                console.log(res.data);
             })
         }
     },
     mutations:{
         GETUSERINFO(state,value){
-            var{address,age,gender,name,info,nickname,phone,qlist,status,admin,username}=value
+            var{address,age,gender,name,info,nickname,phone,qlist,admin,username}=value
             state.address=address
             state.age=age
             state.gender=gender
@@ -26,6 +25,7 @@ const user={
     },
     state:{
         username:'',
+        name:"全局数据仓库的名称",
         info:'如果该用户没有填写则显示这个',
         uid:nanoid(),
         phone:'15562672341',

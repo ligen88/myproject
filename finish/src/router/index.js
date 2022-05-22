@@ -1,3 +1,4 @@
+import user from '@/store/user'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -49,6 +50,16 @@ const routes = [
                 component:()=>import('@/pages/Usermanage')
         
             },
+            {
+                path:"modelmanage",
+                component:()=>import('@/pages/ModelManage')
+        
+            },
+            {
+                path:"troublemanage",
+                component:()=>import('@/pages/TroubleManage')
+        
+            },
         ]
 
     },
@@ -64,6 +75,10 @@ const routes = [
         path:"/display/:id",
         component:()=>import('@/pages/Display')
     },
+    {
+        path:"/linlin",
+        component:()=>import('@/pages/linlin')
+    },
     {   
         name:"charts",
         path:"/charts",
@@ -73,6 +88,7 @@ const routes = [
         path: "*",
         redirect: "/logreg/login"
     },
+   
 
 ]
 
@@ -81,10 +97,9 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes
 })
-// router.beforeEach((to, from, next) => {
-//     const token=localStorage.getItem('token');
-//     if (to.name !== 'login'&&to.name!=='register'&& !token) next({ name: 'login' })
-//     else next()
-//   })
+
+router.beforeEach((to, from, next) => {
+   next();
+})
 
 export default router

@@ -21,13 +21,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="姓名" width="300">
-                <template slot-scope="scope">
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
+             
               <el-table-column label="管理">
                 <template slot-scope="scope">
                   <el-button size="mini" @click="uedit(scope.row)">编辑</el-button>
@@ -69,7 +63,7 @@ export default {
   name: "Usermanage",
   data() {
     return {
-      alluser: "",
+      alluser: [],
       visible: false,
       username: "",
       password: "",
@@ -109,7 +103,7 @@ export default {
             });
              request.post("http://127.0.0.1:8088/api/getall").then((res) => {
                 this.alluser = res.data;
-                });
+            });
           }
         });
       this.visible = false;

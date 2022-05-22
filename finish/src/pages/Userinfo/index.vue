@@ -40,8 +40,6 @@
 <script>
 export default {
   name: "Userinfo",
-  components: {},
-
   data() {
     return {
         isCollapse:true,

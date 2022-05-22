@@ -10,7 +10,7 @@
         center
       >
        <span>用户电话</span> <el-input v-model="phone" placeholder=""></el-input>
-       <span>用户名</span> <el-input v-model="nickname" placeholder=""></el-input>
+       <span>用户名</span> <el-input v-model="name" placeholder=""></el-input>
        <span>用户地址</span><el-input v-model="address" placeholder=""></el-input>
        <span>用户备注</span><el-input v-model="info" placeholder=""></el-input>
         
@@ -26,7 +26,7 @@
             <i class="el-icon-user"></i>
             用户名
           </template>
-          {{ nickname }}
+          {{ username }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
@@ -67,7 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("user", [ "nickname", "address", "info"]),
+    ...mapState("user", [ "name","nickname", "address", "info","username"]),
     phone:{
         get(){
             return this.$store.state.user.phone
@@ -84,7 +84,6 @@ export default {
     },
   },
   mounted() {
-      console.log(this);
     this.$store.dispatch('user/getuserinfo')
   }
 };

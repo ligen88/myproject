@@ -5,8 +5,8 @@
         <el-link target="_blank" @click="createQuestion">+创建问卷</el-link>
       </div>
       <div class="other">
-        <router-link to="/register"><el-link>创建</el-link></router-link>
-        <router-link to="/login"><el-link>登录</el-link></router-link>
+        <router-link to="/logreg/register"><el-link>创建新用户</el-link></router-link>
+        <el-link>使用公共模板</el-link>
       </div>
     </el-aside>
     <el-main>
@@ -158,7 +158,13 @@ export default {
                         type: "success",
                         message: "您已经成功创建了问卷 ",
                     });
-                    this.qlist.unshift(qObj);
+                    if(this.qlist){
+                        this.qlist.unshift(qObj);
+                        return;
+                    }
+                    else{
+                        alert("用户未登录")
+                    }
               }
               else{
                   this.$message({

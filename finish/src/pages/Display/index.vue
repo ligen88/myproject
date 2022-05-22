@@ -40,15 +40,18 @@ export default {
     },
     methods:{
         submit(){
-            alert("提交成功");
+            this.$message({
+                type:"success",
+                message:"提交成功"
+            })
             this.root.num++;
             this.$router.push("/home/questionlist");
         }
     },
     mounted(){
       this.root=this.$route.params.item;
-      console.log(this.root);
   }
+
 }
 </script>
 

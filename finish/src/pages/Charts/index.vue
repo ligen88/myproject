@@ -10,34 +10,26 @@
                     </div>
                     <div v-show="item.type=='radio'||item.type=='checkbox'">
                         <el-table :data="item.option" style="width: 100%">
-                        <el-table-column label="选项" width="180">
+                        <el-table-column label="选项" width="300">
                             <template slot-scope="scope">
                             <span style="margin-left: 10px">{{
                                 scope.row.title
                             }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="数量" width="180">
+                        <el-table-column label="数量" width="300">
                             <template slot-scope="scope">
                             <div slot="reference" class="name-wrapper">
                                 <el-tag size="medium">{{ scope.row.num }}</el-tag>
                             </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="占比" width="180">
-                            <template >
-                            <div slot="reference" class="name-wrapper">
-                                <el-tag size="medium">{{ account }}</el-tag>
-                            </div>
-                            </template>
-                        </el-table-column>
                         </el-table>
-                        <div :id="'img'+index"></div>
-                        <div id="bar"></div>
-                        <div id="pie"></div>
+                        <el-button @click="show(index)">点我显示</el-button>
+                        <div :id="'img'+index" class="chart"></div>
                     </div>
                      <div v-show="item.type=='textarea'">
-                         <el-button type="">详细内容</el-button>
+                         {{item.text}}
                      </div>
                 </el-card>
             </div>
@@ -51,20 +43,17 @@ export default {
     name:"Charts",
     data() {
         return {
-            data1:[{ value: 50, name: '选项一' }, { value: 100, name: '选项二' },{ value: 100, name: '选项三' },],
+            data1:[],
             data3:[],
             data2:[],
             qlist:'',
-            account:''
+            account:'',
+            optionnum:'',
         }
     },
     methods:{
-        setbar(){
-            for(let i in this.data1){
-            this.data3.push(this.data1[i].name);
-            this.data2.push(this.data1[i].value);
-            }
-            var chartDom = document.getElementById("bar");
+        show(index){
+            var chartDom = document.getElementById("img"+index);
             var myChart = echarts.init(chartDom);
             var option = {
             xAxis: {
@@ -83,6 +72,7 @@ export default {
             };
             myChart.setOption(option);
             },
+  
         setpie(){
                 var chartDom = document.getElementById('pie');
                 var myChart = echarts.init(chartDom);
@@ -112,6 +102,19 @@ export default {
     mounted(){
         this.qlist=this.$route.params.item;
         console.log(this.qlist);
+        let dataw=this.qlist.question;
+        for(let i in dataw){
+            if(dataw[i].isdel==false){
+                for(let j in dataw[i].option){
+                    this.data1.push(dataw[i].option[j])
+                }
+            }
+        }
+          for(let i in this.data1){
+                this.data3.push(this.data1[i].title);
+                this.data2.push(this.data1[i].num);
+        }
+        console.log(this.data1);
     }
 }
 
@@ -147,6 +150,12 @@ export default {
                     width: 100px;
                 }
             }
+        }
+        .chart{
+            position: relative;
+            margin: 30px 0px 0px 30px;
+            height: 300px;
+            width: 300px;
         }
 }
 
